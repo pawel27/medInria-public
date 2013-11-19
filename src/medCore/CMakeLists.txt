@@ -30,7 +30,6 @@ set(${PROJECT_NAME}_DEVEL_HEADERS_MOC
   medAbstractDataMesh.h
   medAbstractDataSourceFactory.h
   medAbstractDataSource.h
-  medAbstractProcess.h
   medAbstractViewFiberInteractor.h
   medAbstractView.h
   medAnnotationData.h
@@ -40,6 +39,7 @@ set(${PROJECT_NAME}_DEVEL_HEADERS_MOC
   medMeshAbstractViewInteractor.h
   medMessageController.h
   medPluginManager.h
+  medProcessFactory.h
   medRunnableProcess.h
   medSettingsManager.h
   medViewEventFilter.h
@@ -98,6 +98,7 @@ set(${PROJECT_NAME}_SOURCES
   medAbstractDatabaseItem.cpp
   medAnnotationData.cpp
   medAbstractAnnotationViewInteractor.cpp
+  medProcessFactory.cpp
   medViewEventFilter.cpp
   annotationData/medImageMaskAnnotationData.cpp
   annotationData/medSeedPointAnnotationData.cpp
