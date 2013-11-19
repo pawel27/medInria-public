@@ -30,6 +30,7 @@ set(${PROJECT_NAME}_DEVEL_HEADERS_MOC
   medAbstractDataMesh.h
   medAbstractDataSourceFactory.h
   medAbstractDataSource.h
+  medAbstractProcess.h
   medAbstractViewFiberInteractor.h
   medAbstractView.h
   medAnnotationData.h
