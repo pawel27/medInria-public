@@ -14,6 +14,7 @@
 #pragma once
 
 #include <medGuiExport.h>
+#include <medAbstractWorkspace.h>
 
 #include <QtGui>
 
@@ -96,6 +97,9 @@ public:
      * @return medToolBoxBody *
     */
     medToolBoxBody   *body()   const;
+
+    virtual void setWorkspace(medAbstractWorkspace* workspace);
+    medAbstractWorkspace* getWorkspace();
 
     /**
      * @brief Enables or disable the aboutPlugin button.
@@ -227,4 +231,3 @@ public:\
     virtual QString name() const {return staticName();}\
     virtual QString description() const {return staticDescription();}\
     virtual QStringList categories() const {return staticCategories();}
-
