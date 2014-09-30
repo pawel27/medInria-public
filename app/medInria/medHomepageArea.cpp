@@ -394,6 +394,17 @@ void medHomepageArea::initPage()
     d->navigationWidget->setLayout ( workspaceButtonsLayout );
     d->navigationWidget->setProperty ( "pos", QPoint ( 100,  100 ) );
     d->navigationWidget->setMinimumHeight ( 55 * ( 1 + workspaceDetails.size() ) );
+
+    medHomepageButton * composerButton = new medHomepageButton ( this );
+    composerButton->setToolButtonStyle ( Qt::ToolButtonTextUnderIcon );
+    composerButton->setIcon ( QIcon ( ":/icons/folder.png" ) );
+    composerButton->setText ( "Composer" );
+    composerButton->setMinimumHeight ( 40 );
+    composerButton->setMaximumWidth ( 250 );
+    composerButton->setMinimumWidth ( 250 );
+    composerButton->setFocusPolicy ( Qt::NoFocus );
+    workspaceButtonsLayout->addWidget ( composerButton );
+    QObject::connect ( composerButton, SIGNAL ( clicked() ),this, SLOT ( onShowComposer() ) );
 }
 
 QParallelAnimationGroup* medHomepageArea::getAnimation()
@@ -404,6 +415,11 @@ QParallelAnimationGroup* medHomepageArea::getAnimation()
 void medHomepageArea::onShowBrowser()
 {
     emit showBrowser();
+}
+
+void medHomepageArea::onShowComposer()
+{
+    emit showComposer();
 }
 
 void medHomepageArea::onShowWorkspace ( QString workspace )

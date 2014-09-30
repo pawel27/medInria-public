@@ -29,7 +29,8 @@ public:
      {
          HomePage,
          Browser,
-         WorkSpace
+         WorkSpace,
+         Composer
      };
 
      medMainWindow(QWidget *parent = 0);
@@ -72,6 +73,7 @@ private slots:
     void switchToBrowserArea();
     void switchToWorkspaceArea();
     void switchToHomepageArea();
+    void switchToComposerArea(void);
 
     void toggleQuickAccessVisibility();
     void hideQuickAccess();

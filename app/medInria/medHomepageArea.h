@@ -32,6 +32,7 @@ public:
 
 public slots:
     void onShowBrowser();
+    void onShowComposer();
     void onShowWorkspace(QString workspace);
     void onShowSettings();
     void onShowAbout();
@@ -54,6 +55,7 @@ signals:
     void showHelp();
 
     void showBrowser();
+    void showComposer();
     void showViewer();
     void showWorkspace(QString workspace);
 

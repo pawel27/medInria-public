@@ -37,6 +37,8 @@ add_subdirectory(medRegistration)
 
 add_subdirectory(medVtkInria)
 
+add_subdirectory(medComposer)
+
 ## #############################################################################
 ## complete medInria_INCLUDE_DIRS
 ## #############################################################################

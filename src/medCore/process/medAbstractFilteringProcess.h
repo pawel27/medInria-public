@@ -22,6 +22,7 @@ class MEDCORE_EXPORT medAbstractFilteringProcess : public medAbstractProcess
 public:
     medAbstractFilteringProcess(medAbstractProcess *parent = NULL);
 
+
 public:
     virtual bool isInteractive() const;
 };

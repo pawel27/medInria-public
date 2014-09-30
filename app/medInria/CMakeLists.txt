@@ -127,8 +127,11 @@ target_link_libraries(${PROJECT_NAME}
   dtkScript
   dtkGui
   dtkVr
+  dtkComposer
+  dtkDistributed
   medCore
   medPacs
+  medComposer
   )
 
 

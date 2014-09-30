@@ -16,6 +16,7 @@
 #include <QtGui>
 
 #include <medBrowserArea.h>
+#include <medComposerArea.h>
 #include <medWorkspaceArea.h>
 #include <medHomepageArea.h>
 
@@ -76,6 +77,7 @@ public:
     medBrowserArea*           browserArea;
     medWorkspaceArea*         workspaceArea;
     medHomepageArea*          homepageArea;
+    medComposerArea*          composerArea;
     medSettingsEditor*        settingsEditor;
     QHBoxLayout*              statusBarLayout;
     QWidget*                  rightEndButtons;
@@ -122,6 +124,10 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     d->browserArea = new medBrowserArea(this);
     d->browserArea->setObjectName("medBrowserArea");
 
+    // Composer area
+    d->composerArea = new medComposerArea(this);
+    d->composerArea->setObjectName("Composer");
+
     //  Workspace area.
     d->workspaceArea = new medWorkspaceArea (this);
     d->workspaceArea->setObjectName("medWorkspaceArea");
@@ -135,6 +141,7 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     d->stack->addWidget(d->homepageArea);
     d->stack->addWidget(d->browserArea);
     d->stack->addWidget(d->workspaceArea);
+    d->stack->addWidget (d->composerArea);
 
     //  Setup quick access menu
     d->quickAccessButton = new medQuickAccessPushButton ( this );
@@ -155,6 +162,7 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     connect(d->quickAccessWidget, SIGNAL(homepageSelected()), this, SLOT(switchToHomepageArea()));
     connect(d->quickAccessWidget, SIGNAL(browserSelected()), this, SLOT(switchToBrowserArea()));
     connect(d->quickAccessWidget, SIGNAL(workspaceSelected(QString)), this, SLOT(showWorkspace(QString)));
+    connect(d->quickAccessWidget, SIGNAL(composerSelected()), this, SLOT(switchToComposerArea()));
 
     d->shortcutAccessWidget = new medQuickAccessMenu( false, this );
     d->shortcutAccessWidget->setFocusPolicy(Qt::ClickFocus);
@@ -164,6 +172,7 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     connect(d->shortcutAccessWidget, SIGNAL(homepageSelected()), this, SLOT(switchToHomepageArea()));
     connect(d->shortcutAccessWidget, SIGNAL(browserSelected()), this, SLOT(switchToBrowserArea()));
     connect(d->shortcutAccessWidget, SIGNAL(workspaceSelected(QString)), this, SLOT(showWorkspace(QString)));
+    connect(d->shortcutAccessWidget, SIGNAL(composerSelected()), this, SLOT(switchToComposerArea()));
 
     d->shortcutAccessVisible = false;
     d->controlPressed = false;
@@ -258,6 +267,7 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     d->homepageArea->initPage();
     connect(d->homepageArea, SIGNAL(showBrowser()), this, SLOT(switchToBrowserArea()));
     connect(d->homepageArea, SIGNAL(showWorkspace(QString)), this, SLOT(showWorkspace(QString)));
+    connect (d->homepageArea, SIGNAL(showComposer()), this, SLOT(switchToComposerArea()));
 
     this->setCentralWidget ( d->stack );
     this->setWindowTitle("medInria");
@@ -341,6 +351,10 @@ void medMainWindow::switchToArea(const AreaType areaIndex)
 
     case medMainWindow::WorkSpace:
         this->switchToWorkspaceArea();
+        break;
+
+    case medMainWindow::Composer:
+        this->switchToComposerArea();
         break;
     default:
         this->switchToHomepageArea();
@@ -492,6 +506,22 @@ void medMainWindow::switchToHomepageArea()
 
     if (d->homepageArea->getAnimation())
         d->homepageArea->getAnimation()->start();
+}
+
+void medMainWindow::switchToComposerArea(void)
+{
+    d->shortcutAccessWidget->updateSelected("Composer");
+    d->quickAccessWidget->updateSelected("Composer");
+    d->quickAccessButton->setText(tr("Workspace: Composer"));
+    d->quickAccessButton->setMinimumWidth(170);
+    if (d->quickAccessWidget->isVisible())
+        this->hideQuickAccess();
+
+    if (d->shortcutAccessVisible)
+        this->hideShortcutAccess();
+
+    d->stack->setCurrentWidget(d->composerArea);
+    d->screenshotButton->setEnabled(false);
 }
 
 void medMainWindow::switchToBrowserArea()
