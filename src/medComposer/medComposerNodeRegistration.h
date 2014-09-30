@@ -16,17 +16,17 @@
 
 #include <dtkComposer/dtkComposerNodeLeafProcess.h>
 
-class medComposerNodeFilteringPrivate;
+class medComposerNodeRegistrationPrivate;
 
 // /////////////////////////////////////////////////////////////////
 // numComposerNodeMeshBuilder interface
 // /////////////////////////////////////////////////////////////////
 
-class medComposerNodeFiltering : public dtkComposerNodeLeafProcess
+class medComposerNodeRegistration : public dtkComposerNodeLeafProcess
 {
 public:
-     medComposerNodeFiltering(void);
-    ~medComposerNodeFiltering(void);
+     medComposerNodeRegistration(void);
+    ~medComposerNodeRegistration(void);
 
 public:
     QString type(void);
@@ -50,5 +50,5 @@ public:
     void run(void);
 
 private:
-    medComposerNodeFilteringPrivate *d;
+    medComposerNodeRegistrationPrivate *d;
 };

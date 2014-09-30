@@ -1,17 +1,22 @@
-/* medComposerFactory.cpp ---
- *
- * Author: Julien Wintz
- */
+/*=========================================================================
 
-/* Change Log:
- *
- */
+ medInria
 
-#include "medComposerFactory.h"
-#include "medComposerNodeFiltering.h"
-#include "medComposerNodeImage.h"
-#include "medComposerNodeImageWriter.h"
-#include "medComposerNodeView.h"
+ Copyright (c) INRIA 2013 - 2014. All rights reserved.
+ See LICENSE.txt for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.
+
+=========================================================================*/
+
+#include <medComposerFactory.h>
+#include <medComposerNodeFiltering.h>
+#include <medComposerNodeRegistration.h>
+#include <medComposerNodeImage.h>
+#include <medComposerNodeImageWriter.h>
+#include <medComposerNodeView.h>
 
 #include <dtkCore/dtkAbstractView.h>
 #include <dtkCore/dtkAbstractViewFactory.h>
@@ -61,6 +66,11 @@ medComposerFactory::medComposerFactory(void) : dtkComposerFactory(), d(new medCo
     d->tags["Filtering"] = QStringList() << "filtering";
     d->types["Filtering"] = "medFiltering";
 
+    d->nodes << "Registration";
+    d->descriptions["Registration"] = "<p>Registration process.</p>";
+    d->tags["Registration"] = QStringList() << "Registration";
+    d->types["Registration"] = "medRegistration";
+
     d->nodes << "View";
     d->descriptions["View"] = "<p>medAbstractView</p>";
     d->tags["View"] = QStringList() << "view";
@@ -88,6 +98,9 @@ dtkComposerNode *medComposerFactory::create(const QString& type)
 {
     if(type == "medFiltering")
         return new medComposerNodeFiltering;
+
+    if(type == "medRegistration")
+        return new medComposerNodeRegistration;
 
     if(type == "medAbstractView")
         return new medComposerNodeView;

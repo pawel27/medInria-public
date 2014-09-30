@@ -1,16 +1,16 @@
-/* medComposerNodeView.h ---
- *
- * Author:
- * Created: Mon Nov 18 12:17:37 2013 (+0100)
- * Version:
- * Last-Updated:
- *           By:
- *     Update #: 18
- */
+/*=========================================================================
 
-/* Change Log:
- *
- */
+ medInria
+
+ Copyright (c) INRIA 2013 - 2014. All rights reserved.
+ See LICENSE.txt for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.
+
+=========================================================================*/
+
 
 #pragma once
 

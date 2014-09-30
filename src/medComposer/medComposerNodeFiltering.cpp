@@ -1,16 +1,15 @@
-/* medComposerNodeFiltering.cpp ---
- * 
- * Author: Thibaud Kloczko
- * Created: lun. nov. 18 14:03:59 2013 (+0100)
- * Version: 
- * Last-Updated: lun. nov. 18 14:28:08 2013 (+0100)
- *           By: Thibaud Kloczko
- *     Update #: 25
- */
+/*=========================================================================
 
-/* Change Log:
- * 
- */
+ medInria
+
+ Copyright (c) INRIA 2013 - 2014. All rights reserved.
+ See LICENSE.txt for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.
+
+=========================================================================*/
 
 #include "medComposerNodeFiltering.h"
 
