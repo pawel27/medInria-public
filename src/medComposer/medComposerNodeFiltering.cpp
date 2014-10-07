@@ -99,7 +99,7 @@ bool medComposerNodeFiltering::isAbstractProcess(void) const
 
 QString medComposerNodeFiltering::abstractProcessType(void) const
 {
-    return "dtkAbstractProcess";
+    return "medAbstractFilteringProcess";
 }
 
 void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
