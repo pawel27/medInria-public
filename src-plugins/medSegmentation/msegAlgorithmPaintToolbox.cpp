@@ -138,7 +138,6 @@ public:
                 m_cb->newSeed();
                 m_cb->wandTimer.start();
                 m_cb->setSeed(posImage);
-                m_cb->initiateRegionGrowth = true;
                 m_cb->updateWandRegion(imageView, posImage);
                 m_paintState = PaintState::None; //Wand operation is over
                 
@@ -979,14 +978,6 @@ AlgorithmPaintToolbox::RunConnectedFilter (MaskType::IndexType &index, unsigned 
     double value = tmpPtr->GetPixel(index);
     if (!seedPlanted)
         setSeedPlanted(true,index,planeIndex,value);
-    
-    if (initiateRegionGrowth)
-    {
-        m_wandUpperThresholdSlider->setValue(value+50);
-        m_wandLowerThresholdSlider->setValue(value-50);
-        synchronizeWandSpinBoxesAndSliders();
-        initiateRegionGrowth = false;
-    }
     
     ctiFilter->SetUpper( m_wandUpperThreshold );
     ctiFilter->SetLower( m_wandLowerThreshold );
