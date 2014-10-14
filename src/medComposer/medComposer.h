@@ -23,8 +23,6 @@ class medComposer : public dtkComposer
 public:
     medComposer(QWidget* parent = 0);
 
-    dtkComposerScene *scene(void);
-
     void setFactory(dtkComposerFactory *factory);
 
 private:

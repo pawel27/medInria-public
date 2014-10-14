@@ -68,11 +68,8 @@ void medComposerNodeView::run(void)
 {
     foreach(medAbstractImageData *image, d->receiver_image.allData())
     {
-        medAbstractLayeredView *layerdView = dynamic_cast<medAbstractLayeredView *>(d->view);
-        if(layerdView)
-            layerdView->addLayer(image);
+        d->view ->addLayer(image);
     }
-
 }
 
 QString medComposerNodeView::type(void)
@@ -102,10 +99,6 @@ QString medComposerNodeView::outputLabelHint(int port)
 
 QGraphicsWidget *medComposerNodeView::widget(QGLContext *context)
 {
-//    qDebug() << Q_FUNC_INFO << "Requesting decoration";
-//    return NULL;
-    // TODO graphicsWidget for view ? ;) - RDE
-//    return d->view->item(context);
-    if(d->view)
-      d->view->viewWidget();
+    //TODO
+    return NULL;
 }

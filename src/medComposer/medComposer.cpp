@@ -47,11 +47,8 @@ medComposer::medComposer(QWidget *parent): dtkComposer(parent), d(new medCompose
     this->path()->setScene(d->scene);
 
     this->compass()->setScene(d->scene);
-}
 
-dtkComposerScene *medComposer::scene(void)
-{
-    return d->scene;
+    this->setScene(d->scene);
 }
 
 void medComposer::setFactory(dtkComposerFactory *factory)
