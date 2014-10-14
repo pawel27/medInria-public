@@ -19,8 +19,7 @@
 #include <dtkComposer/dtkComposerTransmitterEmitter.h>
 #include <dtkComposer/dtkComposerTransmitterReceiver.h>
 
-#include <dtkCore/dtkAbstractViewFactory.h>
-#include <dtkCore/dtkAbstractView.h>
+#include <medViewFactory.h>
 
 #include <medAbstractLayeredView.h>
 
@@ -31,7 +30,7 @@
 class medComposerNodeViewPrivate
 {
 public:
-    medAbstractView *view;
+    medAbstractLayeredView *view;
 
 public:
     dtkComposerTransmitterReceiver<medAbstractImageData> receiver_image;
@@ -43,7 +42,7 @@ public:
 
 medComposerNodeView::medComposerNodeView(void) : dtkComposerNodeLeafView(), d(new medComposerNodeViewPrivate)
 {
-    d->view = static_cast<medAbstractView *>(dtkAbstractViewFactory::instance()->create("v3dView"));
+    d->view = medViewFactory::instance()->createView<medAbstractLayeredView>("medVtkView");
 
     this->appendReceiver(&(d->receiver_image));
 }
@@ -103,8 +102,10 @@ QString medComposerNodeView::outputLabelHint(int port)
 
 QGraphicsWidget *medComposerNodeView::widget(QGLContext *context)
 {
-    qDebug() << Q_FUNC_INFO << "Requesting decoration";
-    return NULL;
+//    qDebug() << Q_FUNC_INFO << "Requesting decoration";
+//    return NULL;
     // TODO graphicsWidget for view ? ;) - RDE
 //    return d->view->item(context);
+    if(d->view)
+      d->view->viewWidget();
 }

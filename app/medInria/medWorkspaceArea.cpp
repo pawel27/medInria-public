@@ -228,20 +228,21 @@ void medWorkspaceArea::addDatabaseView()
 
         if(medDatabaseDataSource* dbDataSource = qobject_cast<medDatabaseDataSource*>(dataSource))
         {
-            QVBoxLayout *databaseViewLayout = new QVBoxLayout;
-            databaseViewLayout->setSpacing(0);
-            databaseViewLayout->setContentsMargins(0,0,0,0);
+    QVBoxLayout *databaseViewLayout = new QVBoxLayout;
+    databaseViewLayout->setSpacing(0);
+    databaseViewLayout->setContentsMargins(0,0,0,0);
 
-            databaseViewLayout->addWidget(dbDataSource->compactViewWidget());
-            d->navigatorContainer->setLayout(databaseViewLayout);
+    QWidget *compactViewWidget = dataSource->createCompactViewWidget();
+    databaseViewLayout->addWidget(compactViewWidget);
+    d->navigatorContainer->setLayout(databaseViewLayout);
 
-            dbDataSource->compactViewWidget()->resize(dbDataSource->compactViewWidget()->width(), dbDataSource->compactViewWidget()->height());
-            //little tricks to force to recompute the stylesheet.
-            dbDataSource->compactViewWidget()->setStyleSheet("/* */");
+    compactViewWidget->resize(compactViewWidget->width(), compactViewWidget->height());
+    //little tricks to force to recompute the stylesheet.
+    compactViewWidget->setStyleSheet("/* */");
 
-            connect(dbDataSource->compactViewWidget(), SIGNAL(open(const medDataIndex&)),
-                    this, SIGNAL(open(const medDataIndex&)),
-                    Qt::UniqueConnection);
+//    connect(compactViewWidget, SIGNAL(open(const medDataIndex&)),
+//            this, SIGNAL(open(const medDataIndex&)),
+//            Qt::UniqueConnection);
         }
     }
 }

@@ -108,8 +108,6 @@ QWidget* medDatabaseDataSource::dialogWidget()
 
 QWidget* medDatabaseDataSource::compactViewWidget()
 {
-    if(d->compactWidget.isNull())
-    {
         d->compactWidget = new medDatabaseCompactWidget;
         d->compactView = new medDatabaseView(d->compactWidget);
         d->compactView->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -130,7 +128,6 @@ QWidget* medDatabaseDataSource::compactViewWidget()
         connect(d->compactView, SIGNAL(exportData(const medDataIndex&)), this, SIGNAL(exportData(const medDataIndex&)));
         connect(d->compactView, SIGNAL(dataRemoved(const medDataIndex&)), this, SIGNAL(dataRemoved(const medDataIndex&)));
 
-    }
     return d->compactWidget;
 }
 

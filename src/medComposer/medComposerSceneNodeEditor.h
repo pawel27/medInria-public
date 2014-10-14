@@ -13,25 +13,22 @@
 
 #pragma once
 
-#include <dtkComposer/dtkComposerScene.h>
+#include <dtkComposer/dtkComposerSceneNodeEditor>
 
-#include <medComposerStack.h>
+class medAbstractDataSource;
+class medComposerSceneNodeEditorPrivate;
 
-class medComposerScenePrivate;
-
-class medComposerScene : public dtkComposerScene
+class medComposerSceneNodeEditor : public dtkComposerSceneNodeEditor
 {
 public:
-    medComposerScene(QObject* parent = 0);
+    medComposerSceneNodeEditor(QWidget *parent = 0);
 
-public:
-    void setFactory(dtkComposerFactory *factory);
-    void setStack(medComposerStack *stack);
-    void setGraph(dtkComposerGraph *graph);
+    void setDataSourceWidget( QWidget* dataSourceWidget );
 
-public:
-    void dropEvent(QGraphicsSceneDragDropEvent *event);
+public slots:
+    virtual void setNode(dtkComposerSceneNode *node);
 
 private:
-    medComposerScenePrivate *d;
+    medComposerSceneNodeEditorPrivate *d;
+
 };

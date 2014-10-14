@@ -11,20 +11,21 @@
 
 =========================================================================*/
 
-#pragma once
+#ifndef COMPOSERNODEIMAGE_H
+#define COMPOSERNODEIMAGE_H
 
 #include <dtkComposer/dtkComposerNodeLeaf.h>
 #include <dtkComposer/dtkComposerNodeLeafData.h>
 
 #include <QtCore>
 
-class medComposerNodeImagePrivate;
+class medComposerNodeImageReaderPrivate;
 
-class medComposerNodeImage : public dtkComposerNodeLeaf
+class medComposerNodeImageReader : public dtkComposerNodeLeafData
 {
 public:
-     medComposerNodeImage(void);
-    ~medComposerNodeImage(void);
+     medComposerNodeImageReader(void);
+    ~medComposerNodeImageReader(void);
 
 public:
     bool isAbstractData(void) const;
@@ -37,12 +38,13 @@ public:
 public:
     QString type(void);
     QString titleHint(void) ;
-    void setMimeData(const QMimeData*);
 
 public:
     QString  inputLabelHint(int port);
     QString outputLabelHint(int port);
 
 private:
-    medComposerNodeImagePrivate *d;
+    medComposerNodeImageReaderPrivate *d;
 };
+
+#endif

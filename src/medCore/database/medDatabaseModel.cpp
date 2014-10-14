@@ -452,7 +452,10 @@ QMimeData *medDatabaseModel::mimeData(const QModelIndexList &indexes) const
     {
         medDataIndex dataIndex = item->dataIndex();
         d->draggedDataIndex = dataIndex;
-        return dataIndex.createMimeData();
+        //return dataIndex.createMimeData();
+        QMimeData *data = dataIndex.createMimeData();
+        data->setUrls(QList<QUrl>() << QUrl("node:medComposerNodeImage"));
+        return data;
     }
     else
     {

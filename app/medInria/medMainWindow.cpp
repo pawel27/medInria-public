@@ -124,13 +124,15 @@ medMainWindow::medMainWindow ( QWidget *parent ) : QMainWindow ( parent ), d ( n
     d->browserArea = new medBrowserArea(this);
     d->browserArea->setObjectName("medBrowserArea");
 
+    //  Workspace area.
+    d->workspaceArea = new medWorkspaceArea (this);
+    d->workspaceArea->setObjectName("medWorkspaceArea");
+
     // Composer area
     d->composerArea = new medComposerArea(this);
     d->composerArea->setObjectName("Composer");
 
-    //  Workspace area.
-    d->workspaceArea = new medWorkspaceArea (this);
-    d->workspaceArea->setObjectName("medWorkspaceArea");
+
 
     //  Home page
     d->homepageArea = new medHomepageArea( this );

@@ -20,6 +20,8 @@
 #include <dtkCore/dtkAbstractProcessFactory.h>
 
 #include <medAbstractImageData.h>
+#include <medDataManager.h>
+#include <medMetaDataKeys.h>
 
 // /////////////////////////////////////////////////////////////////
 // medComposerNodeFilteringPrivate interface
@@ -135,6 +137,28 @@ void medComposerNodeFiltering::run()
         d->index = d->filtering->run();
 
         d->emitter_image.setData(qobject_cast<medAbstractImageData *>(d->filtering->output()));
+
+        //copied from filtering workspace
+        //TODO: temporary
+
+        if (! d->filtering->output()->hasMetaData(medMetaDataKeys::SeriesDescription.key()))
+          {
+            QString newSeriesDescription = image->metadata ( medMetaDataKeys::SeriesDescription.key() );
+            newSeriesDescription += " filtered";
+            d->filtering->output()->addMetaData ( medMetaDataKeys::SeriesDescription.key(), newSeriesDescription );
+          }
+
+        foreach ( QString metaData, image->metaDataList() )
+          if (!d->filtering->output()->hasMetaData(metaData))
+            d->filtering->output()->addMetaData ( metaData, image->metaDataValues ( metaData ) );
+
+        foreach ( QString property, image->propertyList() )
+          d->filtering->output()->addProperty ( property,image->propertyValues ( property ) );
+
+        QString generatedID = QUuid::createUuid().toString().replace("{","").replace("}","");
+        d->filtering->output()->setMetaData ( medMetaDataKeys::SeriesID.key(), generatedID );
+
+        medDataManager::instance()->importData(d->filtering->output());
 
     } else {
 

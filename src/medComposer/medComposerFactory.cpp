@@ -14,9 +14,10 @@
 #include <medComposerFactory.h>
 #include <medComposerNodeFiltering.h>
 #include <medComposerNodeRegistration.h>
-#include <medComposerNodeImage.h>
+#include <medComposerNodeImageReader.h>
 #include <medComposerNodeImageWriter.h>
 #include <medComposerNodeView.h>
+#include <medComposerNodeImage.h>
 
 #include <dtkCore/dtkAbstractView.h>
 #include <dtkCore/dtkAbstractViewFactory.h>
@@ -76,10 +77,15 @@ medComposerFactory::medComposerFactory(void) : dtkComposerFactory(), d(new medCo
     d->tags["View"] = QStringList() << "view";
     d->types["View"] = "medAbstractView";
 
+    d->nodes << "Reader";
+    d->descriptions["Reader"] = "<p>medAbstractImage.</p>";
+    d->tags["Reader"] = QStringList() << "image" << "reader";
+    d->types["Reader"] = "medComposerNodeImageReader";
+
     d->nodes << "Image";
     d->descriptions["Image"] = "<p>medAbstractImage.</p>";
-    d->tags["Image"] = QStringList() << "image" << "reader";
-    d->types["Image"] = "medAbstractImageData";
+    d->tags["Image"] = QStringList() << "image";
+    d->types["Image"] = "medComposerNodeImage";
 
     d->nodes << "Writer";
     d->descriptions["Writer"] = "<p>medAbstractImage.</p>";
@@ -105,8 +111,11 @@ dtkComposerNode *medComposerFactory::create(const QString& type)
     if(type == "medAbstractView")
         return new medComposerNodeView;
 
-    if(type == "medAbstractImageData")
+    if(type == "medComposerNodeImage")
         return new medComposerNodeImage;
+
+    if(type == "medComposerNodeImageReader")
+        return new medComposerNodeImageReader;
 
     if(type == "medDataImageWriter")
         return new medComposerNodeImageWriter;

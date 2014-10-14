@@ -14,7 +14,6 @@
 #include <medComposerArea.h>
 #include <dtkGui/dtkSplitter.h>
 #include <dtkGui/dtkToolBox.h>
-#include <dtkComposer/dtkComposer.h>
 #include <dtkComposer/dtkComposerCompass.h>
 #include <dtkComposer/dtkComposerControls.h>
 #include <dtkComposer/dtkComposerFactoryView.h>
@@ -25,12 +24,15 @@
 #include <dtkComposer/dtkComposerStackView.h>
 #include <dtkComposer/dtkComposerView.h>
 #include <dtkDistributed/dtkDistributor.h>
+#include <medComposer/medComposer.h>
 #include <medComposer/medComposerFactory.h>
+#include <medDataSourceManager.h>
+#include <medDatabaseDataSource.h>
 
 class medComposerAreaPrivate
 {
 public:
-    dtkComposer *composer;
+    medComposer *composer;
     dtkComposerFactoryView *nodes;
     dtkComposerSceneModel *model;
     dtkComposerSceneNodeEditor *editor;
@@ -77,7 +79,7 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     connect(d->button_save, SIGNAL(clicked()), this, SLOT(compositionSave()));
     connect(d->button_save_as, SIGNAL(clicked()), this, SLOT(compositionSaveAs()));
     connect(d->button_insert, SIGNAL(clicked()), this, SLOT(compositionInsert()));
-    d->composer = new dtkComposer;
+    d->composer = new medComposer;
     d->composer->setFactory(new medComposerFactory);
     d->composer->view()->setCacheMode(QGraphicsView::CacheBackground);
     d->composer->compass()->setBackgroundBrush(QColor("#222222"));
@@ -87,11 +89,14 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     d->editor->setGraph(d->composer->graph());
     d->model = new dtkComposerSceneModel(this);
     d->model->setScene(d->composer->scene());
-    d->scene = new dtkComposerSceneView(this);
-    d->scene->setScene(d->composer->scene());
-    d->scene->setModel(d->model);
-    d->stack = new dtkComposerStackView(this);
-    d->stack->setStack(d->composer->stack());
+
+    // Not really useful for now
+//    d->scene = new dtkComposerSceneView(this);
+//    d->scene->setScene(d->composer->scene());
+//    d->scene->setModel(d->model);
+//    d->stack = new dtkComposerStackView(this);
+//    d->stack->setStack(d->composer->stack());
+
     d->nodes = new dtkComposerFactoryView(this);
     d->nodes->setFactory(d->composer->factory());
     d->nodes->setDark();
@@ -112,16 +117,19 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     d->button_flag_red->setIcon(d->composer->scene()->flagAsRedAction()->icon());
     d->button_flag_yellow = new QPushButton(this);
     d->button_flag_yellow->setIcon(d->composer->scene()->flagAsYellowAction()->icon());
-    QHBoxLayout *n_layout = new QHBoxLayout;
-    n_layout->addWidget(d->button_flag_blue);
-    n_layout->addWidget(d->button_flag_gray);
-    n_layout->addWidget(d->button_flag_green);
-    n_layout->addWidget(d->button_flag_orange);
-    n_layout->addWidget(d->button_flag_pink);
-    n_layout->addWidget(d->button_flag_red);
-    n_layout->addWidget(d->button_flag_yellow);
-    QFrame *n_menu = new QFrame(this);
-    n_menu->setLayout(n_layout);
+
+    // Not really useful for now
+//    QHBoxLayout *n_layout = new QHBoxLayout;
+//    n_layout->addWidget(d->button_flag_blue);
+//    n_layout->addWidget(d->button_flag_gray);
+//    n_layout->addWidget(d->button_flag_green);
+//    n_layout->addWidget(d->button_flag_orange);
+//    n_layout->addWidget(d->button_flag_pink);
+//    n_layout->addWidget(d->button_flag_red);
+//    n_layout->addWidget(d->button_flag_yellow);
+//    QFrame *n_menu = new QFrame(this);
+//    n_menu->setLayout(n_layout);
+
     connect(d->button_flag_blue, SIGNAL(clicked()), d->composer->scene()->flagAsBlueAction(), SLOT(trigger()));
     connect(d->button_flag_gray, SIGNAL(clicked()), d->composer->scene()->flagAsGrayAction(), SLOT(trigger()));
     connect(d->button_flag_green, SIGNAL(clicked()), d->composer->scene()->flagAsGreenAction(), SLOT(trigger()));
@@ -148,18 +156,41 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     left->setOrientation(Qt::Vertical);
     left->addWidget(f_menu);
     left->addWidget(c_menu);
-    left->addWidget(n_menu);
+
+    //left->addWidget(n_menu);
+
+
+    QWidget *navWidget = medDataSourceManager::instance()->databaseDataSource()->createCompactViewWidget();
+    //navWidget->resize( navWidget->width(), navWidget->height() );
+    //little tricks to force to recompute the stylesheet.
+    navWidget->setStyleSheet("/* */");
+
+    left->addWidget(navWidget);
     left->addWidget(d->nodes);
-    left->addWidget(distributor);
-    dtkComposerControls *controls = new dtkComposerControls(this);
-    controls->setScene(d->composer->scene());
+
+    //Moved to right panel instead
+    //left->addWidget(distributor);
+
+    // Not really useful for now
+    //dtkComposerControls *controls = new dtkComposerControls(this);
+    //controls->setScene(d->composer->scene());
+
     dtkSplitter *right = new dtkSplitter(this);
     right->setOrientation(Qt::Vertical);
-    right->addWidget(d->scene);
+
+    // Not really useful for now
+    //right->addWidget(d->scene);
+
     right->addWidget(d->editor);
-    right->addWidget(d->stack);
+
+    // Not really useful for now
+    //right->addWidget(d->stack);
+
     right->addWidget(d->composer->compass());
-    right->addWidget(controls);
+    right->addWidget(distributor);
+
+    // Not really useful for now
+    //right->addWidget(controls);
     QWidget *middle = new QWidget(this);
     QVBoxLayout *m_layout = new QVBoxLayout(middle);
     m_layout->setContentsMargins(0, 0, 0, 0);
