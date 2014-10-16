@@ -70,14 +70,6 @@ void medComposerScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
         if (url.scheme() == "note") {
 
-           /* dtkComposerStackCommandCreateNote *command = new dtkComposerStackCommandCreateNote;
-            command->setScene(this);
-            command->setParent(this->parentAt(event->scenePos()));
-            command->setPosition(event->scenePos());
-
-            d->stack->push(command);
-
-            event->acceptProposedAction();*/
             dtkComposerScene::dropEvent(event);
 
             return;

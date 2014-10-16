@@ -67,7 +67,7 @@ medComposerNodeRegistration::~medComposerNodeRegistration(void)
 
 QString medComposerNodeRegistration::type(void)
 {
-    return "medRegistration";
+    return "medComposerNodeRegistration";
 }
 
 QString medComposerNodeRegistration::titleHint(void)
@@ -119,6 +119,8 @@ dtkAbstractProcess *medComposerNodeRegistration::process(void) const
 
 void medComposerNodeRegistration::run()
 {
+    qDebug() << "Starting " <<  d->registrationProcess->description();
+
     if (!d->fixedImage.isEmpty()) {
 
         if (!d->registrationProcess){

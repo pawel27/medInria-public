@@ -18,10 +18,12 @@
 #include <dtkComposer/dtkComposerControls.h>
 #include <dtkComposer/dtkComposerFactoryView.h>
 #include <dtkComposer/dtkComposerScene.h>
+#include <dtkComposer/dtkComposerGraph.h>
 #include <dtkComposer/dtkComposerSceneModel.h>
 #include <dtkComposer/dtkComposerSceneNodeEditor.h>
 #include <dtkComposer/dtkComposerSceneView.h>
 #include <dtkComposer/dtkComposerStackView.h>
+#include <dtkComposer/dtkComposerGraphView.h>
 #include <dtkComposer/dtkComposerView.h>
 #include <dtkDistributed/dtkDistributor.h>
 #include <medComposer/medComposer.h>
@@ -38,6 +40,8 @@ public:
     dtkComposerSceneNodeEditor *editor;
     dtkComposerSceneView *scene;
     dtkComposerStackView *stack;
+    dtkComposerGraphView *graphView;
+
 public:
     QString current_composition;
 public:
@@ -56,6 +60,7 @@ public:
 public:
     QPushButton *button_start;
     QPushButton *button_stop;
+    QPushButton *button_cont;
 };
 
 // ///////////////////////////////////////////////////////////////////
@@ -80,7 +85,8 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     connect(d->button_save_as, SIGNAL(clicked()), this, SLOT(compositionSaveAs()));
     connect(d->button_insert, SIGNAL(clicked()), this, SLOT(compositionInsert()));
     d->composer = new medComposer;
-    d->composer->setFactory(new medComposerFactory);
+    medComposerFactory *factory = new medComposerFactory;
+    d->composer->setFactory(factory);
     d->composer->view()->setCacheMode(QGraphicsView::CacheBackground);
     d->composer->compass()->setBackgroundBrush(QColor("#222222"));
     d->editor = new dtkComposerSceneNodeEditor(this);
@@ -91,15 +97,18 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     d->model->setScene(d->composer->scene());
 
     // Not really useful for now
-//    d->scene = new dtkComposerSceneView(this);
-//    d->scene->setScene(d->composer->scene());
-//    d->scene->setModel(d->model);
-//    d->stack = new dtkComposerStackView(this);
-//    d->stack->setStack(d->composer->stack());
+    d->scene = new dtkComposerSceneView(this);
+    d->scene->setScene(d->composer->scene());
+    d->scene->setModel(d->model);
+    d->stack = new dtkComposerStackView(this);
+    d->stack->setStack(d->composer->stack());
 
     d->nodes = new dtkComposerFactoryView(this);
     d->nodes->setFactory(d->composer->factory());
     d->nodes->setDark();
+
+    d->graphView = new dtkComposerGraphView(this);
+    d->graphView->setScene(d->composer->graph());
     // ///////////////////////////////////////////////////////////////////
     //
     // ///////////////////////////////////////////////////////////////////
@@ -142,13 +151,17 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     d->button_start->setObjectName("left");
     d->button_stop = new QPushButton("Stop");
     d->button_stop->setObjectName("right");
+    d->button_cont = new QPushButton("Continue");
+    d->button_cont->setObjectName("Continue");
     QHBoxLayout *c_layout = new QHBoxLayout;
     c_layout->addWidget(d->button_start);
     c_layout->addWidget(d->button_stop);
+    c_layout->addWidget(d->button_cont);
     QFrame *c_menu = new QFrame(this);
     c_menu->setLayout(c_layout);
     connect(d->button_start, SIGNAL(clicked()), d->composer, SLOT(run()));
     connect(d->button_stop, SIGNAL(clicked()), d->composer, SLOT(stop()));
+    connect(d->button_cont, SIGNAL(clicked()), d->composer, SLOT(cont()));
     dtkDistributor *distributor = new dtkDistributor(this);
     distributor->setApplication("medSlave");
     // -- Layout
@@ -188,6 +201,8 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
 
     right->addWidget(d->composer->compass());
     right->addWidget(distributor);
+
+    right->addWidget(d->graphView);
 
     // Not really useful for now
     //right->addWidget(controls);

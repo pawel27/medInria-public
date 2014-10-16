@@ -14,6 +14,7 @@
 #include <medComposer.h>
 #include <medComposerScene.h>
 #include <medComposerStack.h>
+#include <medComposerGraph.h>
 
 #include <dtkComposer/dtkComposerCompass.h>
 #include <dtkComposer/dtkComposerFactory.h>
@@ -23,32 +24,38 @@
 #include <dtkComposer/dtkComposerScene.h>
 #include <dtkComposer/dtkComposerStack.h>
 #include <dtkComposer/dtkComposerView.h>
+#include <dtkComposer/dtkComposerEvaluator.h>
 
 class medComposerPrivate
 {
 public:
     medComposerScene *scene;
     medComposerStack *stack;
+    medComposerGraph *graph;
 };
 
 medComposer::medComposer(QWidget *parent): dtkComposer(parent), d(new medComposerPrivate)
 {
-    d->scene = new medComposerScene;
+    d->scene = new medComposerScene(this);
     d->stack = new medComposerStack;
+    d->graph = new medComposerGraph;
 
     this->view()->setScene(d->scene);
 
     d->scene->setFactory(this->factory());
     d->scene->setMachine(this->machine());
     d->scene->setStack(d->stack);
-    d->scene->setGraph(this->graph());
+    d->scene->setGraph(d->graph);
     d->scene->setContext(this->view()->context());
+
+    this->evaluator()->setGraph(d->graph);
 
     this->path()->setScene(d->scene);
 
     this->compass()->setScene(d->scene);
 
     this->setScene(d->scene);
+    this->setGraph(d->graph);
 }
 
 void medComposer::setFactory(dtkComposerFactory *factory)

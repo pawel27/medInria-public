@@ -66,7 +66,7 @@ medComposerNodeFiltering::~medComposerNodeFiltering(void)
 
 QString medComposerNodeFiltering::type(void) 
 {
-    return "medFiltering";
+    return "medComposerNodeFiltering";
 }
 
 QString medComposerNodeFiltering::titleHint(void)
@@ -116,6 +116,8 @@ dtkAbstractProcess *medComposerNodeFiltering::process(void) const
 
 void medComposerNodeFiltering::run()
 {
+    qDebug() << "Starting " <<  d->filtering->description();
+
     if (!d->receiver_image.isEmpty()) {
 
         if (!d->filtering){
@@ -126,11 +128,10 @@ void medComposerNodeFiltering::run()
 
         medAbstractImageData *image = qobject_cast<medAbstractImageData *>(d->receiver_image.data());
 
-        if (!image) {
-            dtkError() << Q_FUNC_INFO << "Input image is not allocated";
+        if (!image ) {
+            qDebug() << Q_FUNC_INFO << "Input image is not allocated for" << d->filtering->description();;
             return;
         }
-
 
         d->filtering->setInputImage(image);
 

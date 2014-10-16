@@ -44,6 +44,7 @@
 
 #include <medComposerStackCommand.h>
 #include <medComposerNodeImage.h>
+#include <medComposerNodeSegmentation.h>
 
 // /////////////////////////////////////////////////////////////////
 // Base Command
@@ -148,7 +149,6 @@ void medComposerStackCommandCreateNode::setMimeData(const QMimeData* data)
 
 void medComposerStackCommandCreateNode::redo(void)
 {
-
     if(!d->factory)
         return;
 

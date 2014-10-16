@@ -13,11 +13,13 @@
 
 #include <medComposerFactory.h>
 #include <medComposerNodeFiltering.h>
+#include <medComposerNodeSegmentation.h>
 #include <medComposerNodeRegistration.h>
 #include <medComposerNodeImageReader.h>
 #include <medComposerNodeImageWriter.h>
 #include <medComposerNodeView.h>
 #include <medComposerNodeImage.h>
+#include <medComposer.h>
 
 #include <dtkCore/dtkAbstractView.h>
 #include <dtkCore/dtkAbstractViewFactory.h>
@@ -65,12 +67,17 @@ medComposerFactory::medComposerFactory(void) : dtkComposerFactory(), d(new medCo
     d->nodes << "Filtering";
     d->descriptions["Filtering"] = "<p>Filtering process that filters according the plugin one chooses.</p>";
     d->tags["Filtering"] = QStringList() << "filtering";
-    d->types["Filtering"] = "medFiltering";
+    d->types["Filtering"] = "medComposerNodeFiltering";
 
     d->nodes << "Registration";
     d->descriptions["Registration"] = "<p>Registration process.</p>";
     d->tags["Registration"] = QStringList() << "Registration";
-    d->types["Registration"] = "medRegistration";
+    d->types["Registration"] = "medComposerNodeRegistration";
+
+    d->nodes << "Segmentation";
+    d->descriptions["Segmentation"] = "<p>Segmentation process.</p>";
+    d->tags["Segmentation"] = QStringList() << "Segmentation";
+    d->types["Segmentation"] = "medComposerNodeSegmentation";
 
     d->nodes << "View";
     d->descriptions["View"] = "<p>medAbstractView</p>";
@@ -102,10 +109,13 @@ medComposerFactory::~medComposerFactory(void)
 
 dtkComposerNode *medComposerFactory::create(const QString& type)
 {
-    if(type == "medFiltering")
+    if(type == "medComposerNodeFiltering")
         return new medComposerNodeFiltering;
 
-    if(type == "medRegistration")
+    if(type == "medComposerNodeSegmentation")
+        return new medComposerNodeSegmentation;
+
+    if(type == "medComposerNodeRegistration")
         return new medComposerNodeRegistration;
 
     if(type == "medAbstractView")
