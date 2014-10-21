@@ -173,7 +173,7 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     //left->addWidget(n_menu);
 
 
-    QWidget *navWidget = medDataSourceManager::instance()->databaseDataSource()->createCompactViewWidget();
+    QWidget *navWidget = medDataSourceManager::instance()->databaseDataSource()->compactViewWidget();
     //navWidget->resize( navWidget->width(), navWidget->height() );
     //little tricks to force to recompute the stylesheet.
     navWidget->setStyleSheet("/* */");

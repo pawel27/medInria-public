@@ -108,25 +108,25 @@ QWidget* medDatabaseDataSource::dialogWidget()
 
 QWidget* medDatabaseDataSource::compactViewWidget()
 {
-        d->compactWidget = new medDatabaseCompactWidget;
-        d->compactView = new medDatabaseView(d->compactWidget);
-        d->compactView->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        d->compactView->setModel(d->compactProxy);
-        d->compactPreview = new medDatabasePreview(d->compactWidget);
+    d->compactWidget = new medDatabaseCompactWidget;
+    d->compactView = new medDatabaseView(d->compactWidget);
+    d->compactView->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    d->compactView->setModel(d->compactProxy);
+    d->compactPreview = new medDatabasePreview(d->compactWidget);
 
-        d->compactWidget->setViewAndPreview(d->compactView, d->compactPreview);
+    d->compactWidget->setViewAndPreview(d->compactView, d->compactPreview);
 
 
-        for(int i =1; i<12; ++i)
-            d->compactView->hideColumn(i);
+    for(int i =1; i<12; ++i)
+        d->compactView->hideColumn(i);
 
-        connect(d->compactView, SIGNAL(patientClicked(const medDataIndex&)), d->compactPreview, SLOT(showPatientPreview(const medDataIndex&)));
-        connect(d->compactView, SIGNAL(studyClicked(const medDataIndex&)), d->compactPreview, SLOT(showStudyPreview(const medDataIndex&)));
-        connect(d->compactView, SIGNAL(seriesClicked(const medDataIndex&)), d->compactPreview, SLOT(showSeriesPreview(const medDataIndex&)));
+    connect(d->compactView, SIGNAL(patientClicked(const medDataIndex&)), d->compactPreview, SLOT(showPatientPreview(const medDataIndex&)));
+    connect(d->compactView, SIGNAL(studyClicked(const medDataIndex&)), d->compactPreview, SLOT(showStudyPreview(const medDataIndex&)));
+    connect(d->compactView, SIGNAL(seriesClicked(const medDataIndex&)), d->compactPreview, SLOT(showSeriesPreview(const medDataIndex&)));
 
-        connect(d->compactPreview, SIGNAL(openRequest(medDataIndex)), d->compactView , SIGNAL(open(medDataIndex)));
-        connect(d->compactView, SIGNAL(exportData(const medDataIndex&)), this, SIGNAL(exportData(const medDataIndex&)));
-        connect(d->compactView, SIGNAL(dataRemoved(const medDataIndex&)), this, SIGNAL(dataRemoved(const medDataIndex&)));
+    connect(d->compactPreview, SIGNAL(openRequest(medDataIndex)), d->compactView , SIGNAL(open(medDataIndex)));
+    connect(d->compactView, SIGNAL(exportData(const medDataIndex&)), this, SIGNAL(exportData(const medDataIndex&)));
+    connect(d->compactView, SIGNAL(dataRemoved(const medDataIndex&)), this, SIGNAL(dataRemoved(const medDataIndex&)));
 
     return d->compactWidget;
 }

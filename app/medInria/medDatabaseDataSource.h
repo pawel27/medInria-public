@@ -33,7 +33,7 @@ public:
     static bool registered();
 
     QWidget* mainViewWidget();
-    QWidget* createCompactViewWidget();
+    QWidget* compactViewWidget();
     virtual QWidget* dialogWidget();
 
     QWidget* sourceSelectorWidget();

@@ -232,7 +232,7 @@ void medWorkspaceArea::addDatabaseView()
     databaseViewLayout->setSpacing(0);
     databaseViewLayout->setContentsMargins(0,0,0,0);
 
-    QWidget *compactViewWidget = dataSource->createCompactViewWidget();
+    QWidget *compactViewWidget = dataSource->compactViewWidget();
     databaseViewLayout->addWidget(compactViewWidget);
     d->navigatorContainer->setLayout(databaseViewLayout);
 
