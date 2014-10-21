@@ -15,6 +15,8 @@
 
 #include <dtkComposer/dtkComposerTransmitterEmitter.h>
 #include <dtkComposer/dtkComposerTransmitterReceiver.h>
+#include <dtkComposer/dtkComposerSceneNodeLeaf.h>
+#include <dtkComposer/dtkComposerScenePort.h>
 
 #include <medAbstractFilteringProcess.h>
 #include <dtkCore/dtkAbstractProcessFactory.h>
@@ -22,6 +24,8 @@
 #include <medAbstractImageData.h>
 #include <medDataManager.h>
 #include <medMetaDataKeys.h>
+#include <medComposerScene.h>
+
 
 // /////////////////////////////////////////////////////////////////
 // medComposerNodeFilteringPrivate interface
@@ -41,6 +45,7 @@ public:
 public:
     qlonglong index;
     qreal value;
+    QGraphicsProxyWidget *graphicsWidget;
 };
 
 // /////////////////////////////////////////////////////////////////
@@ -107,6 +112,30 @@ QString medComposerNodeFiltering::abstractProcessType(void) const
 void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
 {
     d->filtering = dynamic_cast<medAbstractFilteringProcess*>(process);
+
+    // Short test to add an additional port and the toolbox widget
+    if(d->filtering->description() == "animaSymmetryPlane")
+    {
+        dtkComposerTransmitterReceiver<medAbstractImageData> *newReceiver =
+                new dtkComposerTransmitterReceiver<medAbstractImageData>(this);
+
+        this->appendReceiver(newReceiver);
+
+        medComposerScene *scene = dynamic_cast<medComposerScene *>(d->graphicsWidget->scene());
+        dtkComposerSceneNodeLeaf *sceneNode = dynamic_cast<dtkComposerSceneNodeLeaf *>(d->graphicsWidget->parentItem());
+        if(sceneNode)
+        {
+            dtkComposerScenePort *port = new dtkComposerScenePort(dtkComposerScenePort::Input, sceneNode);
+            sceneNode->addInputPort(port);
+            port->setLabel("Additional image");
+        }
+
+        d->graphicsWidget->setWidget(new QLineEdit("TODO: add process toolbox here"));
+
+        sceneNode->layout();
+        d->graphicsWidget->adjustSize();
+        scene->update();
+    }
 }
 
 dtkAbstractProcess *medComposerNodeFiltering::process(void) const
@@ -166,4 +195,13 @@ void medComposerNodeFiltering::run()
         dtkWarn() << Q_FUNC_INFO << "The input are not all set. Nothing is done.";
         d->emitter_image.clearData();
     }
+}
+
+QGraphicsWidget *medComposerNodeFiltering::widget(QGLContext *context)
+{
+    d->graphicsWidget = new QGraphicsProxyWidget;
+
+    d->graphicsWidget->setWidget(new QLabel("Choose Implementation"));
+
+    return d->graphicsWidget;
 }

@@ -202,7 +202,7 @@ medComposerArea::medComposerArea(QWidget *parent) : QFrame(parent)
     right->addWidget(d->composer->compass());
     right->addWidget(distributor);
 
-    right->addWidget(d->graphView);
+    //right->addWidget(d->graphView);
 
     // Not really useful for now
     //right->addWidget(controls);
