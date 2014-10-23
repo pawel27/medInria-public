@@ -49,6 +49,9 @@ public:
 public:
     void run(void);
 
+public:
+    QGraphicsWidget *widget(QGLContext *context);
+
 private:
     medComposerNodeRegistrationPrivate *d;
 };

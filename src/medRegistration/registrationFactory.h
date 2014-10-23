@@ -22,8 +22,7 @@ class registrationFactoryPrivate;
 
 class MEDREGISTRATIONFACTORY_EXPORT registrationFactory : public QObject
 {
-
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

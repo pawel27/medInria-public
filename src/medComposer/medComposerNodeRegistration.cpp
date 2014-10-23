@@ -15,12 +15,15 @@
 
 #include <dtkComposer/dtkComposerTransmitterEmitter.h>
 #include <dtkComposer/dtkComposerTransmitterReceiver.h>
+#include <dtkComposer/dtkComposerSceneNodeLeaf.h>
+
+#include <medComposerScene.h>
 
 #include <medAbstractRegistrationProcess.h>
 #include <dtkCore/dtkAbstractProcessFactory.h>
 
 #include <medAbstractImageData.h>
-
+#include <medToolBox.h>
 
 // /////////////////////////////////////////////////////////////////
 // medComposerNodeRegistrationPrivate interface
@@ -41,6 +44,8 @@ public:
 public:
     qlonglong index;
     qreal value;
+
+    QGraphicsProxyWidget *graphicsWidget;
 };
 
 // /////////////////////////////////////////////////////////////////
@@ -110,6 +115,18 @@ QString medComposerNodeRegistration::abstractProcessType(void) const
 void medComposerNodeRegistration::setProcess(dtkAbstractProcess *process)
 {
     d->registrationProcess = dynamic_cast<medAbstractRegistrationProcess*>(process);
+
+    if(d->registrationProcess)
+    {
+        medComposerScene *scene = dynamic_cast<medComposerScene *>(d->graphicsWidget->scene());
+        dtkComposerSceneNodeLeaf *sceneNode = dynamic_cast<dtkComposerSceneNodeLeaf *>(d->graphicsWidget->parentItem());
+
+        d->graphicsWidget->setWidget(d->registrationProcess->toolbox());
+
+        sceneNode->layout();
+        d->graphicsWidget->adjustSize();
+        scene->update();
+    }
 }
 
 dtkAbstractProcess *medComposerNodeRegistration::process(void) const
@@ -155,4 +172,14 @@ void medComposerNodeRegistration::run()
         dtkWarn() << Q_FUNC_INFO << "The input are not all set. Nothing is done.";
         d->outputImage.clearData();
     }
+}
+
+
+QGraphicsWidget *medComposerNodeRegistration::widget(QGLContext *context)
+{
+    d->graphicsWidget = new QGraphicsProxyWidget;
+
+    d->graphicsWidget->setWidget(new QLabel("Choose Implementation"));
+
+    return d->graphicsWidget;
 }
