@@ -25,6 +25,7 @@
 #include <medDataManager.h>
 #include <medMetaDataKeys.h>
 #include <medComposerScene.h>
+#include <medToolBox.h>
 
 
 // /////////////////////////////////////////////////////////////////
@@ -113,24 +114,12 @@ void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
 {
     d->filtering = dynamic_cast<medAbstractFilteringProcess*>(process);
 
-    // Short test to add an additional port and the toolbox widget
-    if(d->filtering->description() == "animaSymmetryPlane")
+    if(d->filtering)
     {
-        dtkComposerTransmitterReceiver<medAbstractImageData> *newReceiver =
-                new dtkComposerTransmitterReceiver<medAbstractImageData>(this);
-
-        this->appendReceiver(newReceiver);
-
         medComposerScene *scene = dynamic_cast<medComposerScene *>(d->graphicsWidget->scene());
         dtkComposerSceneNodeLeaf *sceneNode = dynamic_cast<dtkComposerSceneNodeLeaf *>(d->graphicsWidget->parentItem());
-        if(sceneNode)
-        {
-            dtkComposerScenePort *port = new dtkComposerScenePort(dtkComposerScenePort::Input, sceneNode);
-            sceneNode->addInputPort(port);
-            port->setLabel("Additional image");
-        }
 
-        d->graphicsWidget->setWidget(new QLineEdit("TODO: add process toolbox here"));
+        d->graphicsWidget->setWidget(d->filtering->toolbox());
 
         sceneNode->layout();
         d->graphicsWidget->adjustSize();
