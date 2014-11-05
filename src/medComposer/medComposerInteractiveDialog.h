@@ -13,25 +13,20 @@
 
 #pragma once
 
-#include <dtkComposer/dtkComposer.h>
+#include <QDialog>
 
-class medComposerPrivate;
-class dtkComposerFactory;
+class medViewContainerSplitter;
+class medComposerInteractiveDialogPrivate;
 
-class medComposer : public dtkComposer
+class medComposerInteractiveDialog : public QDialog
 {
-    Q_OBJECT
+public:
+    medComposerInteractiveDialog(QWidget *parent = 0);
+    ~medComposerInteractiveDialog();
 
 public:
-    medComposer(QWidget* parent = 0);
-
-    void setFactory(dtkComposerFactory *factory);
-
-public slots:
-    void run(void);
+    void setContainerSplitter(medViewContainerSplitter*);
 
 private:
-    medComposerPrivate *d;
+    medComposerInteractiveDialogPrivate *d;
 };
-
-

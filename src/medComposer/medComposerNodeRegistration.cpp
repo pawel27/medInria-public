@@ -165,7 +165,7 @@ void medComposerNodeRegistration::run()
 
         d->index = d->registrationProcess->run();
 
-        d->outputImage.setData(qobject_cast<medAbstractImageData *>(d->registrationProcess->output()));
+        d->outputImage.setData(qobject_cast<medAbstractImageData*>(d->registrationProcess->output<medAbstractImageData>(0)));
 
     } else {
 

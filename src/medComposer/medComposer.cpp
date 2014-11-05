@@ -15,6 +15,7 @@
 #include <medComposerScene.h>
 #include <medComposerStack.h>
 #include <medComposerGraph.h>
+#include <medComposerEvaluator.h>
 
 #include <dtkComposer/dtkComposerCompass.h>
 #include <dtkComposer/dtkComposerFactory.h>
@@ -32,6 +33,7 @@ public:
     medComposerScene *scene;
     medComposerStack *stack;
     medComposerGraph *graph;
+    medComposerEvaluator *evaluator;
 };
 
 medComposer::medComposer(QWidget *parent): dtkComposer(parent), d(new medComposerPrivate)
@@ -40,7 +42,11 @@ medComposer::medComposer(QWidget *parent): dtkComposer(parent), d(new medCompose
     d->stack = new medComposerStack;
     d->graph = new medComposerGraph;
 
+    d->evaluator = new medComposerEvaluator;
+    d->evaluator->setGraph(d->graph);
+
     this->view()->setScene(d->scene);
+    this->setEvaluator(d->evaluator);
 
     d->scene->setFactory(this->factory());
     d->scene->setMachine(this->machine());
@@ -63,4 +69,13 @@ void medComposer::setFactory(dtkComposerFactory *factory)
     dtkComposer::setFactory(factory);
 
     d->scene->setFactory(factory);
+}
+
+void medComposer::run(void)
+{
+    this->updateRemotes(d->scene->root());
+
+    QtConcurrent::run(d->evaluator, &medComposerEvaluator::run, false);
+
+    d->graph->update();
 }

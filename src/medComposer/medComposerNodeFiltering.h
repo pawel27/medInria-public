@@ -50,6 +50,9 @@ public:
     void run(void);
 
 public:
+    bool isInteractive() const;
+
+public:
     QGraphicsWidget *widget(QGLContext *context);
 
 private:

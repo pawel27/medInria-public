@@ -19,6 +19,7 @@
 #include <dtkComposer/dtkComposerGraphNode.h>
 
 #include <medComposerNodeSegmentation.h>
+#include <medComposerNodeFiltering.h>
 
 medComposerGraph::medComposerGraph(): dtkComposerGraph()
 {
@@ -32,6 +33,12 @@ void medComposerGraph::addNode(dtkComposerSceneNode *node)
     if(dynamic_cast<medComposerNodeSegmentation *>(node->wrapee()))
     {
         medComposerNodeSegmentation *n = dynamic_cast<medComposerNodeSegmentation *>(node->wrapee());
+        if(n->isInteractive())
+            this->graphNode(node)->setBreakPoint();
+    }
+    else if(dynamic_cast<medComposerNodeFiltering *>(node->wrapee()))
+    {
+        medComposerNodeFiltering *n = dynamic_cast<medComposerNodeFiltering *>(node->wrapee());
         if(n->isInteractive())
             this->graphNode(node)->setBreakPoint();
     }

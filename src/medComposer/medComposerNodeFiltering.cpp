@@ -110,6 +110,12 @@ QString medComposerNodeFiltering::abstractProcessType(void) const
     return "medAbstractFilteringProcess";
 }
 
+bool medComposerNodeFiltering::isInteractive() const
+{
+    //TODO: temporary, for test only
+    return true;
+}
+
 void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
 {
     d->filtering = dynamic_cast<medAbstractFilteringProcess*>(process);
@@ -119,11 +125,31 @@ void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
         medComposerScene *scene = dynamic_cast<medComposerScene *>(d->graphicsWidget->scene());
         dtkComposerSceneNodeLeaf *sceneNode = dynamic_cast<dtkComposerSceneNodeLeaf *>(d->graphicsWidget->parentItem());
 
+        foreach(dtkComposerTransmitter* receiver, this->receivers())
+          this->removeReceiver(receiver);
+
+        foreach(dtkComposerScenePort *port, sceneNode->inputPorts())
+        {
+          sceneNode->removeInputPort(port);
+          delete port;
+        }
+
+        foreach(medProcessIOPort *port, d->filtering->inputs())
+        {
+            this->appendReceiver(port->toTransmitter());
+
+            dtkComposerScenePort *scenePort = new dtkComposerScenePort(dtkComposerScenePort::Input, sceneNode);
+            sceneNode->addInputPort(scenePort);
+            scenePort->setLabel(port->name());
+        }
+
         d->graphicsWidget->setWidget(d->filtering->toolbox());
 
         sceneNode->layout();
         d->graphicsWidget->adjustSize();
         scene->update();
+
+        sceneNode->show();
     }
 }
 
@@ -136,54 +162,42 @@ void medComposerNodeFiltering::run()
 {
     qDebug() << "Starting " <<  d->filtering->description();
 
-    if (!d->receiver_image.isEmpty()) {
 
-        if (!d->filtering){
-            dtkWarn() << Q_FUNC_INFO << "No process instantiated, abort:" << this->currentImplementation();
-            d->emitter_image.clearData();
-            return;
-        }
+    for(int i=0; i<this->receivers().count(); i++)
+    {
+        //TODO: find a way to link the port and the receiver
+        dtkComposerTransmitter* receiver = this->receivers()[i];
+        medProcessIOPort *port = d->filtering->inputs()[i];
 
-        medAbstractImageData *image = qobject_cast<medAbstractImageData *>(d->receiver_image.data());
+        port->updateFromTransmitter(receiver);
+    }
 
-        if (!image ) {
-            qDebug() << Q_FUNC_INFO << "Input image is not allocated for" << d->filtering->description();;
-            return;
-        }
+//    if (!d->receiver_image.isEmpty()) {
 
-        d->filtering->setInputImage(image);
+//        if (!d->filtering){
+//            dtkWarn() << Q_FUNC_INFO << "No process instantiated, abort:" << this->currentImplementation();
+//            d->emitter_image.clearData();
+//            return;
+//        }
+
+//        medAbstractImageData *image = qobject_cast<medAbstractImageData *>(d->receiver_image.data());
+
+//        if (!image ) {
+//            qDebug() << Q_FUNC_INFO << "Input image is not allocated for" << d->filtering->description();;
+//            return;
+//        }
+
+//        d->filtering->setInput<medAbstractImageData>(image,0);
 
         d->index = d->filtering->run();
 
-        d->emitter_image.setData(qobject_cast<medAbstractImageData *>(d->filtering->output()));
+//        d->emitter_image.setData(qobject_cast<medAbstractImageData *>(d->filtering->output<medAbstractImageData>(0)));
 
-        //copied from filtering workspace
-        //TODO: temporary
+//    } else {
 
-        if (! d->filtering->output()->hasMetaData(medMetaDataKeys::SeriesDescription.key()))
-          {
-            QString newSeriesDescription = image->metadata ( medMetaDataKeys::SeriesDescription.key() );
-            newSeriesDescription += " filtered";
-            d->filtering->output()->addMetaData ( medMetaDataKeys::SeriesDescription.key(), newSeriesDescription );
-          }
-
-        foreach ( QString metaData, image->metaDataList() )
-          if (!d->filtering->output()->hasMetaData(metaData))
-            d->filtering->output()->addMetaData ( metaData, image->metaDataValues ( metaData ) );
-
-        foreach ( QString property, image->propertyList() )
-          d->filtering->output()->addProperty ( property,image->propertyValues ( property ) );
-
-        QString generatedID = QUuid::createUuid().toString().replace("{","").replace("}","");
-        d->filtering->output()->setMetaData ( medMetaDataKeys::SeriesID.key(), generatedID );
-
-        medDataManager::instance()->importData(d->filtering->output());
-
-    } else {
-
-        dtkWarn() << Q_FUNC_INFO << "The input are not all set. Nothing is done.";
-        d->emitter_image.clearData();
-    }
+//        dtkWarn() << Q_FUNC_INFO << "The input are not all set. Nothing is done.";
+//        d->emitter_image.clearData();
+//    }
 }
 
 QGraphicsWidget *medComposerNodeFiltering::widget(QGLContext *context)

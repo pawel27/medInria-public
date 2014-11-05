@@ -13,25 +13,29 @@
 
 #pragma once
 
-#include <dtkComposer/dtkComposer.h>
+#include <dtkComposer/dtkComposerEvaluator.h>
 
-class medComposerPrivate;
-class dtkComposerFactory;
+class medComposerEvaluatorPrivate;
+class dtkComposerGraph;
 
-class medComposer : public dtkComposer
+class medComposerEvaluator : public dtkComposerEvaluator
 {
     Q_OBJECT
 
 public:
-    medComposer(QWidget* parent = 0);
+    medComposerEvaluator(QObject *parent = 0);
+    ~medComposerEvaluator();
 
-    void setFactory(dtkComposerFactory *factory);
+public:
+    void setGraph(dtkComposerGraph *graph);
 
 public slots:
-    void run(void);
+    void run(bool run_concurrent = false);
+    void showInteractiveDialog();
+
+signals:
+    void breakpointReached();
 
 private:
-    medComposerPrivate *d;
+    medComposerEvaluatorPrivate *d;
 };
-
-

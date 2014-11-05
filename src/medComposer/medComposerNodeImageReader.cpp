@@ -36,7 +36,7 @@ public:
     dtkComposerTransmitterReceiver<medAbstractImageData> receiver_image;
 
 public:
-    dtkComposerTransmitterEmitter<medAbstractImageData> emitter_image;
+    dtkComposerTransmitterEmitter<medAbstractData> emitter_image;
 };
 
 // /////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ void medComposerNodeImageReader::run(void)
         if(d->dataReader)
         {
             read = d->dataReader->read(filename);
-            d->emitter_image.setData(dynamic_cast<medAbstractImageData *>(d->dataReader->data()));
+            d->emitter_image.setData(dynamic_cast<medAbstractData *>(d->dataReader->data()));
 
             if(read)
                 qDebug() << "Read success";
@@ -116,7 +116,7 @@ void medComposerNodeImageReader::run(void)
         }
 
     } else  if (!d->receiver_image.isEmpty()) {
-        medAbstractImageData *image = d->receiver_image.data();
+        medAbstractData *image = d->receiver_image.data();
         d->emitter_image.setData(image);
     } else {
         qDebug() << Q_FUNC_INFO << " No port connected";
