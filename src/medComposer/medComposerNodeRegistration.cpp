@@ -19,7 +19,7 @@
 
 #include <medComposerScene.h>
 
-#include <medAbstractRegistrationProcess.h>
+#include <medAbstractEstimateTransformationProcess.h>
 #include <dtkCore/dtkAbstractProcessFactory.h>
 
 #include <medAbstractImageData.h>
@@ -32,7 +32,7 @@
 class medComposerNodeRegistrationPrivate
 {
 public:
-    medAbstractRegistrationProcess *registrationProcess;
+    medAbstractEstimateTransformationProcess *registrationProcess;
 
 public:
     dtkComposerTransmitterReceiver<medAbstractImageData> fixedImage;
@@ -109,12 +109,12 @@ bool medComposerNodeRegistration::isAbstractProcess(void) const
 
 QString medComposerNodeRegistration::abstractProcessType(void) const
 {
-    return "medAbstractRegistrationProcess";
+    return "medAbstractEstimateTransformationProcess";
 }
 
 void medComposerNodeRegistration::setProcess(dtkAbstractProcess *process)
 {
-    d->registrationProcess = dynamic_cast<medAbstractRegistrationProcess*>(process);
+    d->registrationProcess = dynamic_cast<medAbstractEstimateTransformationProcess*>(process);
 
     if(d->registrationProcess)
     {
