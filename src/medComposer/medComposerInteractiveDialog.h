@@ -20,12 +20,19 @@ class medComposerInteractiveDialogPrivate;
 
 class medComposerInteractiveDialog : public QDialog
 {
+    Q_OBJECT
+
 public:
     medComposerInteractiveDialog(QWidget *parent = 0);
     ~medComposerInteractiveDialog();
 
 public:
     void setContainerSplitter(medViewContainerSplitter*);
+
+    virtual void showEvent ( QShowEvent * event );
+
+public slots:
+    void showWorkspace();
 
 private:
     medComposerInteractiveDialogPrivate *d;

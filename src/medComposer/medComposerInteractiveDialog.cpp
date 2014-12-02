@@ -28,6 +28,9 @@ public:
     QSplitter* splitter;
     medToolBoxContainer* toolBoxContainer;
     medAbstractWorkspace *workspace;
+
+    QPropertyAnimation *animation;
+
 };
 
 medComposerInteractiveDialog::medComposerInteractiveDialog(QWidget *parent):
@@ -60,6 +63,25 @@ medComposerInteractiveDialog::medComposerInteractiveDialog(QWidget *parent):
 
         layout->addWidget(d->splitter);
     }
+
+    QPushButton *nextButton = new QPushButton("Next");
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addWidget(nextButton, 0, Qt::AlignRight);
+
+    layout->addLayout(buttonLayout);
+
+    connect(nextButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    QSize mainWindowSize = QApplication::activeWindow()->size();
+    QSize dialogSize(mainWindowSize.width()-100, mainWindowSize.height()-100);
+
+    d->animation = new QPropertyAnimation(this, "geometry");
+    d->animation->setDuration(400);
+    d->animation->setStartValue(QRect(25, 25, 0, 0));
+    d->animation->setEndValue(QRect(25, 25, dialogSize.width() , dialogSize.height()));
+
+    connect(d->animation, SIGNAL(finished()), this, SLOT(showWorkspace()));
+
 }
 
 medComposerInteractiveDialog::~medComposerInteractiveDialog()
@@ -72,3 +94,17 @@ void medComposerInteractiveDialog::setContainerSplitter(medViewContainerSplitter
     if(d->workspace)
       d->workspace->tabbedViewContainers()->setSplitter(0, splitter);
 }
+
+void medComposerInteractiveDialog::showEvent ( QShowEvent * event )
+{
+    d->splitter->hide();
+
+    d->animation->start();
+}
+
+void medComposerInteractiveDialog::showWorkspace()
+{
+    d->splitter->show();
+
+}
+
