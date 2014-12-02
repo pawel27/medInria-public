@@ -14,7 +14,7 @@
 #pragma once
 
 #ifdef WIN32
-    #ifdef MEDITKIMAGEPLUGIN_EXPORTS
+    #ifdef medItkImagePlugin_EXPORTS
         #define MEDITKIMAGEPLUGIN_EXPORT __declspec(dllexport)
     #else
         #define MEDITKIMAGEPLUGIN_EXPORT __declspec(dllimport)

@@ -17,6 +17,7 @@
 #include <QUuid>
 
 #include <medDataIndex.h>
+#include <medCoreExport.h>
 
 class medAbstractDataSource;
 class medDataSourceManagerPrivate;
@@ -24,7 +25,7 @@ class medAbstractData;
 class medDatabaseDataSource;
 
 
-class medDataSourceManager : public QObject
+class MEDCORE_EXPORT medDataSourceManager : public QObject
 {
     Q_OBJECT
 

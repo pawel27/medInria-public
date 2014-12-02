@@ -252,7 +252,7 @@ private:
     using dtkAbstractProcess::read;
     using dtkAbstractProcess::write;
     using dtkAbstractProcess::setParameter;
-    using dtkAbstractProcess::setInput;
+    //using dtkAbstractProcess::setInput;
     using dtkAbstractProcess::setData;
     //TODO rename our output methode
     //using dtkAbstractProcess::output;
@@ -263,7 +263,7 @@ private:
     medAbstractProcessPrivate* d;
 };
 
-class medRunnableProcess: public medAbstractJob
+class MEDCORE_EXPORT medRunnableProcess: public medAbstractJob
 {
     Q_OBJECT
 

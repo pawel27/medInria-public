@@ -14,11 +14,12 @@
 #pragma once
 
 #include <QtCore>
+#include <medCoreExport.h>
 
 class medAbstractUndoRedoProcess;
 
 
-class medAbstractUndoRedoProcessWrapper : public QObject
+class MEDCORE_EXPORT medAbstractUndoRedoProcessWrapper : public QObject
 {
     Q_OBJECT
 
@@ -44,7 +45,7 @@ private:
 class medUndoRedoToolBox;
 class medAbstractUndoRedoProcessPrivate;
 
-class medAbstractUndoRedoProcess
+class MEDCORE_EXPORT medAbstractUndoRedoProcess
 {  
 public:
     medAbstractUndoRedoProcess();

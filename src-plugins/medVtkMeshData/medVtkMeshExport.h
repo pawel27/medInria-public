@@ -14,7 +14,7 @@
 #pragma once
 
 #ifdef WIN32
-    #ifdef MEDVTKMESHPLUGIN_EXPORTS
+    #ifdef medVtkMeshPlugin_EXPORTS
         #define MEDVTKMESHPLUGIN_EXPORT __declspec(dllexport)
     #else
         #define MEDVTKMESHPLUGIN_EXPORT __declspec(dllimport)

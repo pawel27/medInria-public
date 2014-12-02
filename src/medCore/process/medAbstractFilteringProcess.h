@@ -14,9 +14,10 @@
 #pragma once
 
 #include <medAbstractProcess.h>
+#include <medCoreExport.h>
 
 
-class medAbstractFilteringProcess : public medAbstractProcess
+class MEDCORE_EXPORT medAbstractFilteringProcess : public medAbstractProcess
 {
 public:
     medAbstractFilteringProcess(medAbstractProcess *parent = NULL);
