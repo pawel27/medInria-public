@@ -233,8 +233,8 @@ int medMeshTools::update()
         
     const QString& id = this->input<medAbstractData>(0)->identifier();
 
-	dtkSmartPointer<medAbstractData>output = medAbstractDataFactory::instance()->createSmartPointer("medVtkMeshData");
-	this->setOutput<medAbstractData>(output, 0);
+	d->output = medAbstractDataFactory::instance()->createSmartPointer("medVtkMeshData");
+	this->setOutput<medAbstractData>(d->output, 0);
 	
 	int res = EXIT_SUCCESS;
 	

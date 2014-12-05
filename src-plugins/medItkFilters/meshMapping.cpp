@@ -57,13 +57,13 @@ public:
         medAbstractData* data = parent->input<medAbstractData>(1);
 
 		if ( !structure ||!structure->data() 
-            || !data ||!data->data())
-			return -1;
+            || !data ||!data->data()){qDebug()<<""<<structure<<""<<structure->data()<<""<<data<<""<<data->data()<<"";
+        return -1;}
 			
         typedef itk::Image<PixelType, 3> ImageType;
-
+        try{
         //Converting the mesh
-        if(!structure->identifier().contains("vtkDataMesh"))
+        if(!structure->identifier().contains("medVtkMeshData"))
             return -1;
         vtkMetaDataSet * structureDataset = static_cast<vtkMetaDataSet*>(structure->data());
         vtkPolyData * structurePolydata = static_cast<vtkPolyData*>(structureDataset->GetDataSet());
@@ -108,6 +108,10 @@ public:
         transformFilter->SetInputConnection(cast->GetOutputPort());
         transformFilter->SetTransform(t);
 
+        if(structurePolydata)
+            qDebug()<<" structure polydata";
+        if(transformFilter->GetOutput())
+            qDebug()<<" transform Filter";
         // Probe magnitude with iso-surface.
         vtkProbeFilter* probe = vtkProbeFilter::New();
         probe->SetInput(structurePolydata);
@@ -122,43 +126,50 @@ public:
 
 		parent->output<medAbstractData>(0)->copyMetaDataFrom(structure);
         parent->output<medAbstractData>(0)->setData(smesh);
+        }
+        catch( itk::ExceptionObject & err )
+          {
+            std::cerr << "ExceptionObject caught !" << std::endl;
+            std::cerr << err << std::endl;
+            return EXIT_SUCCESS; // Since the goal of the example is to catch the exception, we declare this a success.
+          }
 
         return EXIT_SUCCESS;
     }
 
-    //int mapMeshOnMesh()
-    //{
-    //    medAbstractData* structure = parent->input<medAbstractData>(0);
-    //    medAbstractData* data = parent->input<medAbstractData>(1);
+    int mapMeshOnMesh()
+    {
+        medAbstractData* structure = parent->input<medAbstractData>(0);
+        medAbstractData* data = parent->input<medAbstractData>(1);
 
-    //    if ( !structure ||!structure->data() || !data ||!data->data())
-    //        return -1;
+        if ( !structure ||!structure->data() || !data ||!data->data())
+            return -1;
 
-    //    //Converting the meshes
-    //     if(!structure->identifier().contains("vtkDataMesh"))
-    //        return -1;
-    //    vtkMetaDataSet * structureDataset = static_cast<vtkMetaDataSet*>(structure->data());
-    //    vtkPolyData * structurePolydata = static_cast<vtkPolyData*>(structureDataset->GetDataSet());
+        //Converting the meshes
+         if(!structure->identifier().contains("medVtkMeshData"))
+            return -1;
+        vtkMetaDataSet * structureDataset = static_cast<vtkMetaDataSet*>(structure->data());
+        vtkPolyData * structurePolydata = static_cast<vtkPolyData*>(structureDataset->GetDataSet());
 
-    //    vtkMetaDataSet * dataDataset = static_cast<vtkMetaDataSet*>(data->data());
-    //    vtkPolyData * dataPolydata = static_cast<vtkPolyData*>(dataDataset->GetDataSet());
+        vtkMetaDataSet * dataDataset = static_cast<vtkMetaDataSet*>(data->data());
+        vtkPolyData * dataPolydata = static_cast<vtkPolyData*>(dataDataset->GetDataSet());
 
-    //    // Probe magnitude with iso-surface.
-    //    vtkProbeFilter* probe = vtkProbeFilter::New();
-    //    probe->SetInput(structurePolydata);
-    //    probe->SetSource(dataPolydata);
-    //    probe->SpatialMatchOn();
-    //    probe->Update();
-    //    vtkPolyData * polydata = probe->GetPolyDataOutput();
+        // Probe magnitude with iso-surface.
+        vtkProbeFilter* probe = vtkProbeFilter::New();
+        probe->SetInput(structurePolydata);
+        probe->SetSource(dataPolydata);
+        probe->SpatialMatchOn();
+        probe->Update();
+        vtkPolyData * polydata = probe->GetPolyDataOutput();
 
-    //    vtkMetaSurfaceMesh * smesh = vtkMetaSurfaceMesh::New();
-    //    smesh->SetDataSet(polydata);
+        vtkMetaSurfaceMesh * smesh = vtkMetaSurfaceMesh::New();
+        smesh->SetDataSet(polydata);
 
-    //    parent->output<medAbstractData>(0)->copyMetaDataFrom(structure);
-    //    parent->output<medAbstractData>(0)->setData(smesh);
+        parent->output<medAbstractData>(0)->copyMetaDataFrom(structure);
+        parent->output<medAbstractData>(0)->setData(smesh);
 
-    //    return EXIT_SUCCESS;
-    //}
+        return EXIT_SUCCESS;
+    }
 
 };
 
@@ -192,10 +203,10 @@ QList<medAbstractParameter*> meshMapping::parameters()
 
 int meshMapping::update()
 {
-    if ( !this->input<medAbstractData*>(0) )
+    if ( !this->input<medAbstractData*>(1) )
         return -1;
 
-    QString id = this->input<medAbstractData>(0)->identifier();
+    QString id = this->input<medAbstractData>(1)->identifier();
     dtkSmartPointer <medAbstractData> output = medAbstractDataFactory::instance()->createSmartPointer("medVtkMeshData");
 
     int res = EXIT_SUCCESS;
@@ -242,10 +253,10 @@ int meshMapping::update()
     {
         res = d->mapImageOnMesh<double>();
     }
-    //else if ( id == "medVtkMeshData" )
-    //{
-    //    res = d->mapMeshOnMesh();
-    //}
+     else if ( id == "medVtkMeshData" )
+     {
+        res = d->mapMeshOnMesh();
+     }
     else
     {
         d->res = "Error : pixel type not yet implemented (" + id + ")";
