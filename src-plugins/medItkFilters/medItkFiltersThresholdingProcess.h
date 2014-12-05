@@ -18,16 +18,16 @@
 
 #include <medItkFiltersPluginExport.h>
 
-class medItkFiltersGaussianProcessPrivate;
+class medItkFiltersThresholdingProcessPrivate;
 class medAbstractData;
 
-class medItkFiltersPlugin_EXPORT medItkFiltersGaussianProcess : public medItkFiltersProcessBase
+class medItkFiltersPlugin_EXPORT medItkFiltersThresholdingProcess : public medItkFiltersProcessBase
 {
     Q_OBJECT
     
 public:
-    medItkFiltersGaussianProcess(medItkFiltersGaussianProcess * parent = 0);
-    virtual ~medItkFiltersGaussianProcess(void);
+    medItkFiltersThresholdingProcess(medItkFiltersThresholdingProcess * parent = 0);
+    virtual ~medItkFiltersThresholdingProcess(void);
 
     static bool registered ( void );
     
@@ -36,12 +36,11 @@ public slots:
 
 public:
     QList<medAbstractParameter*> parameters();
-    QString identifier(){return "itkGaussianProcess";}
 
 private:
-    medItkFiltersGaussianProcessPrivate *d;
+    medItkFiltersThresholdingProcessPrivate *d;
 };
 
-dtkAbstractProcess * createmedItkFiltersGaussianProcess(void);
+dtkAbstractProcess * createmedItkFiltersThresholdingProcess(void);
 
 

@@ -32,6 +32,9 @@
 #include <medItkFiltersToolBox.h>
 //#include <itkMorphologicalFiltersToolBox.h>
 #include <medItkSubtractImageFilter.h>
+#include <medItkFiltersThresholdingProcess.h>
+#include <medMeshTools.h>
+#include <meshMapping.h>
 
 #include <dtkLog/dtkLog.h>
 
@@ -75,6 +78,9 @@ bool medItkFiltersPlugin::initialize()
 //    if ( !itkMorphologicalFiltersToolBox::registered() )          { dtkWarn() << "Unable to register itkMorphologicalFilters toolbox";                      }
     if ( !medItkSubtractImageFilter::registered() )    { dtkWarn() << "Unable to register medItkSubtractImageFilter type";   }
 
+    if ( !medItkFiltersThresholdingProcess::registered() )    { dtkWarn() << "Unable to register medItkThresh type";   }
+    if ( !medMeshTools::registered() )    { dtkWarn() << "Unable to register medMeshTools type";   }
+    if ( !meshMapping::registered() )    { dtkWarn() << "Unable to register meshMapping type";   }
 
     return true;
 }
@@ -144,7 +150,9 @@ QStringList medItkFiltersPlugin::types() const
                          << "itkDilateProcess"
                          << "itkErodeProcess"
                          << "itkCloseProcess"
-                         << "itkOpenProcess";
+                         << "itkOpenProcess"
+                         << "itkThresholdingProcess"
+                         << "medMeshTools";
 }
 
 Q_EXPORT_PLUGIN2 ( medItkFiltersPlugin, medItkFiltersPlugin )

@@ -14,6 +14,7 @@
 #pragma once
 
 #include <QDialog>
+#include <medComposerExport.h>
 
 class medViewContainerSplitter;
 class medComposerInteractiveDialogPrivate;

@@ -48,7 +48,9 @@ medItkBasicFiltersProcess::medItkBasicFiltersProcess(medItkBasicFiltersProcess *
                 << "Median filter"
                 << "Invert intensity filter"
                 << "Shrink image filter"
-                << "Intensity windowing filter";
+                << "Intensity windowing filter"
+                << "Thresholding"
+                << "Mesh Creation";
 
     d->toolbox->setAvailableProcesses(filtersList);
 
@@ -125,6 +127,14 @@ void medItkBasicFiltersProcess::setupProcess(QString process)
     {
         d->process = dtkAbstractProcessFactory::instance()->createSmartPointer ( "itkWindowingProcess" );
     }
+    else if(process ==  "Thresholding")
+    {
+        d->process = dtkAbstractProcessFactory::instance()->createSmartPointer ( "itkThresholdingProcess" );
+    }
+    else if(process ==  "Mesh Creation")
+    {
+        d->process = dtkAbstractProcessFactory::instance()->createSmartPointer ( "medMeshTools" );
+    }
 
     if(d->process)
     {
@@ -147,6 +157,14 @@ void medItkBasicFiltersProcess::setupProcess(QString process)
 
 int medItkBasicFiltersProcess::update ( void )
 {
+    medAbstractData *input = this->input<medAbstractData>(0);
+    medAbstractData *output = this->output<medAbstractData>(0);
+
+    if(!input)
+        qDebug()<<"PAS d' INPUT";
+    d->process->setInput<medAbstractData>(input, 0);
+    d->process->setOutput<medAbstractData>(output, 0);
+
     return d->process->start();
 }
 

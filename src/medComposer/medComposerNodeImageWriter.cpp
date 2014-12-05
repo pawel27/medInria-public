@@ -71,12 +71,13 @@ QString medComposerNodeImageWriter::abstractDataType(void) const
 
 void medComposerNodeImageWriter::run(void)
 {
+    qDebug()<<"Writer";
     bool written = false;
-    QString filename = *d->receiver_file.data();
+    QString filename = *d->receiver_file.data();qDebug()<<"Nom du fichier : "<<filename;
     dtkAbstractData* imData = d->receiver_image.data();
     if(!imData)
     {
-        qWarning() << "attempt to write NULL data";
+        qDebug() << "attempt to write NULL data";
         return;
     }
 
@@ -84,6 +85,7 @@ void medComposerNodeImageWriter::run(void)
 
     if ( writers.size() ==0 )
     {
+        qDebug()<<"PAS de writers";
         return;
     }
 
@@ -115,6 +117,7 @@ void medComposerNodeImageWriter::run(void)
         else
             qDebug() << "Write failure";
     }
+    qDebug()<<"Writer done";
 }
 
 QString medComposerNodeImageWriter::type(void)

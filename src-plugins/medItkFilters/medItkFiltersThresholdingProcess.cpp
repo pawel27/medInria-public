@@ -11,50 +11,50 @@
 
 =========================================================================*/
 
-#include <medItkFiltersGaussianProcess.h>
+#include <medItkFiltersThresholdingProcess.h>
 
 #include <dtkCore/dtkAbstractProcessFactory.h>
 #include <medAbstractDataFactory.h>
 
 #include <medMetaDataKeys.h>
 #include <medDoubleParameter.h>
+#include <medBoolParameter.h>
 
 #include <itkImage.h>
 #include <itkCommand.h>
-#include <itkSmoothingRecursiveGaussianImageFilter.h>
-
+#include <itkThresholdImageFilter.h>
 #include <itkExceptionObject.h>
-#include <itkSmoothingRecursiveGaussianImageFilter.h>
 
 
-class medItkFiltersGaussianProcessPrivate
+class medItkFiltersThresholdingProcessPrivate
 {
 public:
-    medItkFiltersGaussianProcessPrivate(medItkFiltersGaussianProcess *q){parent = q;}
-    virtual ~medItkFiltersGaussianProcessPrivate(void) {}
+    medItkFiltersThresholdingProcessPrivate(medItkFiltersThresholdingProcess *q){parent = q;}
+    virtual ~medItkFiltersThresholdingProcessPrivate(void) {}
 
-    medItkFiltersGaussianProcess* parent;
+    medItkFiltersThresholdingProcess* parent;
     medDoubleParameter *sigmaParam;
+	medDoubleParameter *threshold, *outsideValue;
+	//medBoolParameter *comparisonOperator;
     QList<medAbstractParameter*> parameters;
 
     template <class PixelType> void update ( void )
     {
-        qDebug()<<"GAUSSian filter update";
         typedef itk::Image< PixelType, 3 > ImageType;
-        typedef itk::SmoothingRecursiveGaussianImageFilter< ImageType, ImageType >  GaussianFilterType;
-        typename GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();
+		typedef itk::ThresholdImageFilter < ImageType>  ThresholdImageFilterType;
+        typename ThresholdImageFilterType::Pointer thresholdFilter = ThresholdImageFilterType::New();
 
-        gaussianFilter->SetInput ( dynamic_cast<ImageType *> ( ( itk::Object* ) ( parent->input<medAbstractData>(0)->data() ) ) );
-        gaussianFilter->SetSigma( sigmaParam->value() );
+        thresholdFilter->SetInput ( dynamic_cast<ImageType *> ( ( itk::Object* ) ( parent->input<medAbstractData>(0)->data() ) ) );
+        thresholdFilter->SetLower( threshold->value() );
 
         itk::CStyleCommand::Pointer callback = itk::CStyleCommand::New();
         callback->SetClientData ( ( void * ) parent );
         parent->setCallBack(callback);
-        gaussianFilter->AddObserver ( itk::ProgressEvent(), callback );
+        thresholdFilter->AddObserver ( itk::ProgressEvent(), callback );
 
         try
         {
-            gaussianFilter->Update();
+            thresholdFilter->Update();
         }
         catch (itk::ExceptionObject err)
         {
@@ -62,57 +62,59 @@ public:
             qDebug()<<res;
         }
 
-        parent->output<medAbstractData>(0)->setData ( gaussianFilter->GetOutput() );
+        parent->output<medAbstractData>(0)->setData ( thresholdFilter->GetOutput() );
 
         QString newSeriesDescription = parent->input<medAbstractData>(0)->metadata ( medMetaDataKeys::SeriesDescription.key() );
-        newSeriesDescription += " gaussian filter (" + QString::number(sigmaParam->value()) + ")";
+        newSeriesDescription += " thresholding filter (" + QString::number(threshold->value()) + ")";
 
-        parent->output<medAbstractData>(0)->addMetaData ( medMetaDataKeys::SeriesDescription.key(), newSeriesDescription );
-        qDebug()<<"GAUSSian filter update fin";
+        parent->output<medAbstractData>(0)->setMetaData ( medMetaDataKeys::SeriesDescription.key(), newSeriesDescription );
     }
 };
 
 
-medItkFiltersGaussianProcess::medItkFiltersGaussianProcess(medItkFiltersGaussianProcess *parent)
-    : medItkFiltersProcessBase(parent), d(new medItkFiltersGaussianProcessPrivate(this))
+medItkFiltersThresholdingProcess::medItkFiltersThresholdingProcess(medItkFiltersThresholdingProcess *parent)
+    : medItkFiltersProcessBase(parent), d(new medItkFiltersThresholdingProcessPrivate(this))
 {
     this->setFilter(this);
 
-    this->setDescription(tr("ITK gaussian filter"));
-
-    d->sigmaParam = new medDoubleParameter("Sigma value", this);
-    d->sigmaParam->setRange(0,10);
-    d->sigmaParam->setValue(1.0);
-
-    d->parameters << d->sigmaParam;
-    qDebug()<<"IDE : "<<this->identifier();
+    this->setDescription(tr("ITK thresholding filter"));
+	
+	d->threshold = new medDoubleParameter("Lower Threshold value", this);
+	d->threshold->setRange(-10000, 10000);
+	d->threshold->setValue(200.0);
+	
+	d->outsideValue = new medDoubleParameter("Outside value", this);
+	d->outsideValue->setRange(-10000, 10000);
+	d->outsideValue->setValue(0.0);
+	
+    d->parameters << d->threshold << d->outsideValue;
 }
 
-medItkFiltersGaussianProcess::~medItkFiltersGaussianProcess( void )
+medItkFiltersThresholdingProcess::~medItkFiltersThresholdingProcess( void )
 {
 }
 
 //-------------------------------------------------------------------------------------------
 
-bool medItkFiltersGaussianProcess::registered( void )
+bool medItkFiltersThresholdingProcess::registered( void )
 {
-    return dtkAbstractProcessFactory::instance()->registerProcessType("itkGaussianProcess", createmedItkFiltersGaussianProcess);
+    return dtkAbstractProcessFactory::instance()->registerProcessType("itkThresholdingProcess", createmedItkFiltersThresholdingProcess);
 }
 
 //-------------------------------------------------------------------------------------------
 
-QList<medAbstractParameter*> medItkFiltersGaussianProcess::parameters()
+QList<medAbstractParameter*> medItkFiltersThresholdingProcess::parameters()
 {
     return d->parameters;
 }
 
 //-------------------------------------------------------------------------------------------
 
-int medItkFiltersGaussianProcess::update ( void )
+int medItkFiltersThresholdingProcess::update ( void )
 {
     if ( !this->input<medAbstractData *>(0) )
         return -1;
-    qDebug()<<"GAUSSian filter BLOUP";
+
     QString id = this->input<medAbstractData>(0)->identifier();
 
     qDebug() << "itkFilters, update : " << id;
@@ -179,7 +181,7 @@ int medItkFiltersGaussianProcess::update ( void )
 // Type instanciation
 // /////////////////////////////////////////////////////////////////
 
-dtkAbstractProcess * createmedItkFiltersGaussianProcess ( void )
+dtkAbstractProcess * createmedItkFiltersThresholdingProcess ( void )
 {
-    return new medItkFiltersGaussianProcess;
+    return new medItkFiltersThresholdingProcess;
 }

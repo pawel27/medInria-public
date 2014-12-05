@@ -14,9 +14,10 @@
 #pragma once
 
 #include <dtkComposer/dtkComposerGraph.h>
+#include <medComposerExport.h>
 
 
-class medComposerGraph : public dtkComposerGraph
+class MEDCOMPOSER_EXPORT medComposerGraph : public dtkComposerGraph
 {
 public:
     medComposerGraph();

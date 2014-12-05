@@ -14,8 +14,9 @@
 #pragma once
 
 #include <dtkComposer/dtkComposerFactory.h>
+#include "medComposerExport.h"
 
-class medComposerFactory : public dtkComposerFactory
+class MEDCOMPOSER_EXPORT medComposerFactory : public dtkComposerFactory
 {
     Q_OBJECT
 

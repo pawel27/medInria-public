@@ -14,8 +14,8 @@
 #pragma once
 
 #include <dtkCore/dtkAbstractData.h>
-
 #include <medCoreExport.h>
+#include <QMetaType>
 
 class medAbstractDataPrivate;
 
@@ -79,7 +79,10 @@ private:
 };
 
 Q_DECLARE_METATYPE(medAbstractData)
-Q_DECLARE_METATYPE(medAbstractData *)
+Q_DECLARE_METATYPE(medAbstractData*)
+Q_DECLARE_METATYPE(medAbstractData**)
+//Q_DECLARE_METATYPE(QPointer<medAbstractData>)
+
 
 #define MED_DATA_INTERFACE_NO_MOC(_name,_desc) \
 public:\
@@ -93,3 +96,4 @@ public:\
 public:\
     static QString staticIdentifier() {return QString(staticMetaObject.className());}\
     MED_DATA_INTERFACE_NO_MOC(_name,_desc)
+

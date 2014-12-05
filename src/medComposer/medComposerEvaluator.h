@@ -14,11 +14,12 @@
 #pragma once
 
 #include <dtkComposer/dtkComposerEvaluator.h>
+#include <medComposerExport.h>
 
 class medComposerEvaluatorPrivate;
 class dtkComposerGraph;
 
-class medComposerEvaluator : public dtkComposerEvaluator
+class MEDCOMPOSER_EXPORT medComposerEvaluator : public dtkComposerEvaluator
 {
     Q_OBJECT
 

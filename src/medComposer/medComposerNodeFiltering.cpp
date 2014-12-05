@@ -113,11 +113,12 @@ QString medComposerNodeFiltering::abstractProcessType(void) const
 bool medComposerNodeFiltering::isInteractive() const
 {
     //TODO: temporary, for test only
-    return true;
+    return false;
 }
 
 void medComposerNodeFiltering::setProcess(dtkAbstractProcess *process)
 {
+    qDebug()<<"node filtering : set Process";
     d->filtering = dynamic_cast<medAbstractFilteringProcess*>(process);
 
     if(d->filtering)
