@@ -47,6 +47,7 @@ public:
 	meshMappingPrivate(meshMapping *q) {parent=q;}
 	virtual ~meshMappingPrivate(void) {}
 	
+    dtkSmartPointer <medAbstractData> output;
 	meshMapping *parent;
 	QList<medAbstractParameter*> parameters;
 	QString res;
@@ -56,9 +57,8 @@ public:
         medAbstractData* structure = parent->input<medAbstractData>(0);
         medAbstractData* data = parent->input<medAbstractData>(1);
 
-		if ( !structure ||!structure->data() 
-            || !data ||!data->data()){qDebug()<<""<<structure<<""<<structure->data()<<""<<data<<""<<data->data()<<"";
-        return -1;}
+		if ( !structure || !data )
+        return -1;
 			
         typedef itk::Image<PixelType, 3> ImageType;
         try{
@@ -112,13 +112,14 @@ public:
             qDebug()<<" structure polydata";
         if(transformFilter->GetOutput())
             qDebug()<<" transform Filter";
-        // Probe magnitude with iso-surface.
-        vtkProbeFilter* probe = vtkProbeFilter::New();
-        probe->SetInput(structurePolydata);
-        probe->SetSourceConnection(transformFilter->GetOutputPort());
-        probe->SpatialMatchOn();
-        probe->Update();
-        vtkPolyData * polydata = probe->GetPolyDataOutput();
+        //// Probe magnitude with iso-surface.
+        //vtkProbeFilter* probe = vtkProbeFilter::New();
+        //probe->SetInput(structurePolydata);
+        //probe->SetSourceConnection(transformFilter->GetOutputPort());
+        //probe->SpatialMatchOn();
+        //probe->Update();
+        //vtkPolyData * polydata = probe->GetPolyDataOutput();
+        vtkPolyData * polydata = structurePolydata;
 
 
         vtkMetaSurfaceMesh * smesh = vtkMetaSurfaceMesh::New();
@@ -207,8 +208,8 @@ int meshMapping::update()
         return -1;
 
     QString id = this->input<medAbstractData>(1)->identifier();
-    dtkSmartPointer <medAbstractData> output = medAbstractDataFactory::instance()->createSmartPointer("medVtkMeshData");
-
+    d->output = medAbstractDataFactory::instance()->createSmartPointer("medVtkMeshData");
+    this->setOutput<medAbstractData>(d->output, 0);
     int res = EXIT_SUCCESS;
 	
     qDebug() << "itkFilters, update : " << id;
