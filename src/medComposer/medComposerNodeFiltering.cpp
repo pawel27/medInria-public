@@ -38,10 +38,10 @@ public:
     medAbstractFilteringProcess *filtering;
 
 public:
-    dtkComposerTransmitterReceiver<medAbstractImageData> receiver_image;
+    dtkComposerTransmitterReceiver<medAbstractData> receiver_image;
 
 public:
-    dtkComposerTransmitterEmitter<medAbstractImageData> emitter_image;
+    dtkComposerTransmitterEmitter<medAbstractData> emitter_image;
 
 public:
     qlonglong index;
