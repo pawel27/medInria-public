@@ -788,3 +788,8 @@ void medViewContainer::showToolBar()
 {
     d->toolBar->show();
 }
+
+QWidget * medViewContainer::getToolBar()
+{
+    return d->toolBar;
+}
